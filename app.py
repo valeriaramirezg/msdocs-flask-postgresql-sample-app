@@ -104,6 +104,13 @@ def api_add_entry():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+# BORRAR LA TABLA
+@app.route('/delete-entries', methods=['POST'])
+def delete_entries():
+    db.session.query(ImageCloud).delete()
+    db.session.commit()
+    return redirect(url_for('index'))
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
