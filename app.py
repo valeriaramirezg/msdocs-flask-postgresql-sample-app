@@ -41,7 +41,7 @@ class ImageCloud(db.Model):
     __tablename__ = 'image_cloud'
 
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date, nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
     username = db.Column(db.Text, nullable=False)
     filename = db.Column(db.Text, nullable=False)
     pixels = db.Column(db.Text, nullable=False)
@@ -65,6 +65,7 @@ def favicon():
 
 @app.route('/create-table', methods=['POST'])
 def create_table():
+    db.drop_all()
     db.create_all()
     return redirect(url_for('index'))
 
@@ -72,7 +73,7 @@ def create_table():
 @app.route('/add-entry', methods=['POST'])
 def add_entry():
     new_entry = ImageCloud(
-        date=datetime.now().date(),
+        date=datetime.now(),
         username='test_user',
         filename='example.png',
         pixels='1920x1080'
@@ -93,7 +94,7 @@ def api_add_entry():
     
     try:
         new_entry = ImageCloud(
-            date=datetime.strptime(data['date'], '%Y-%m-%d').date(),
+            date=datetime.fromisoformat(data['date']),
             username=data['username'],
             filename=data['filename'],
             pixels=data['pixels']
